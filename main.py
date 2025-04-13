@@ -1,7 +1,12 @@
 import random 
 
 class Deck():
+    """
+    Represents a standard 52-card deck used in the game.
+    Handles creation, shuffling and dealing of cards.
+    """
     def __init__(self):
+        """Initialize a new deck with 52 cards (13 ranks in 4 suits)."""
         self.cards = []
         suits = ["spades" ,"clubs", "heart" , "diamonds"]
         ranks = [{'rank' : 'A' , "value" : 11 } ,
@@ -22,10 +27,20 @@ class Deck():
                 self.cards.append(Card(suit, rank))
 
     def shuffle(self):
+        """Randomize the order of cards in the deck if there are cards remaining."""
         if len(self.cards) > 1:
             random.shuffle(self.cards)
 
     def deal(self, n):
+        """
+        Deal n cards from the deck.
+        
+        Args:
+            n: Number of cards to deal
+            
+        Returns:
+            List of dealt cards or message if deck is empty
+        """
         cards_dealt = []      
         for i in range (n):
             if len(self.cards) == 0:
@@ -36,22 +51,37 @@ class Deck():
         return cards_dealt
     
 class Card():
+    """Represents a single playing card with suit and rank."""
     def __init__(self, suit ,rank):
        self.suit = suit 
        self.rank = rank
     
     def __str__(self):
+        """String representation of a card (e.g., 'A of spades')."""
         return f"{self.rank['rank']} of {self.suit}"
 
 class Hand():
+    """
+    Represents a hand of cards held by either the player or dealer.
+    Handles card management and score calculation.
+    """
     def __init__(self, dealer = False):
+        """
+        Initialize a new hand.
+        
+        Args:
+            dealer: Boolean indicating if this is the dealer's hand
+        """
         self.cards = []
         self.value = 0
         self.dealer = dealer
+        
     def add_card(self, card_list):
+        """Add one or more cards to the hand."""
         self.cards.extend(card_list)
 
     def calculate_value(self):
+        """Calculate the total value of the hand."""
         self.value = 0
         has_ace = False
         
@@ -65,13 +95,16 @@ class Hand():
             self.value -= 10
     
     def get_value(self):
+        """Get the current value of the hand."""
         self.calculate_value()
         return self.value
     
     def is_blackjack(self):
+        """Check if the hand is a blackjack (value equals 21)."""
         return self.get_value() == 21
     
     def display(self, show_all_dealer = False):
+        """Display the cards in the hand."""
         print(f'''{"Dealer's" if self.dealer else "Your"} hand:''')
         for index, card in enumerate(self.cards):
             if index == 0 and self.dealer and not show_all_dealer and not self.is_blackjack():
